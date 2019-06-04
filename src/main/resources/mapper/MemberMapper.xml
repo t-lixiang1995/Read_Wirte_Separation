@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="com.pcitc.example.mapper.MemberMapper">
+
+	<resultMap id="result" type="com.pcitc.example.entity.Member">
+        <result property="id" column="id"/>        
+        
+        <result property="name" column="name"/>
+        
+        <result property="password" column="password"/>                   
+	</resultMap>
+	
+	<sql id="Columns">
+			 id
+			,name
+			,password
+	</sql>
+	
+		<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		<selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+            SELECT REPLACE(UUID(),'-','') FROM DUAL
+        </selectKey>
+        INSERT INTO test (
+	        	id
+	        	<if test="name != null and name != ''">
+		        	,name
+		      	</if>
+		     	<if test="password != null and password != ''">
+		        	,password
+		      	</if>
+        ) VALUES (
+	        	#{id}
+	        	<if test="name != null and name != ''">
+		        	,#{name}
+		      	</if>
+	        	<if test="password != null and password != ''">
+		        	,#{password}
+		      	</if>
+        )
+	</insert>
+
+	<select id ="selectByExample" resultMap="result">
+	    SELECT 
+			id,
+			name,
+			password
+		FROM test
+	</select>
+</mapper>
+
